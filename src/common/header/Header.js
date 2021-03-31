@@ -13,9 +13,12 @@ import Input from "@material-ui/core/Input";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { Divider } from '@material-ui/core';
+import Modal from 'react-modal';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (theme) => ({
     root: {
       flexGrow: 1,
     },
@@ -65,9 +68,29 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1, 1, 1, 7),
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     },
-  }));
+  });
 
   class Header extends Component {
+
+    constructor () {
+        super();
+        this.state = {
+          showModal: false
+        };
+        
+        this.handleOpenModal = this.handleOpenModal.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
+      }
+      
+      handleOpenModal () {
+        this.setState({ showModal: true });
+      }
+      
+      handleCloseModal () {
+        this.setState({ showModal: false });
+      }
+
+    
     render() {
         const { classes } = this.props;
         
@@ -96,10 +119,31 @@ const useStyles = makeStyles((theme) => ({
                                     style={{ color: '#c4c4c4' }}
                                 />
                 </div>
-              <Button className={classes.loginButton} style={{ background: '#c4c4c4' }} >
-              <AccountCircle />
-                  Login
-                  </Button>
+                <div>
+                    <Button className={classes.loginButton} style={{ background: '#c4c4c4' }} onClick={this.handleOpenModal}>
+                        <span>
+                            <AccountCircle />
+                            Login
+                            </span>
+                    </Button>
+                    <Modal 
+                        isOpen={this.state.showModal}
+                        contentLabel="onRequestClose Example"
+                        onRequestClose={this.handleCloseModal}
+                        shouldCloseOnOverlayClick={true}>
+                        <Tabs>
+                            <div>
+                            <Tab label = "Login" />
+                            </div>
+                            <div>
+                            <Tab label = "Signup" />    
+                            </div>
+                        </Tabs>
+                        
+                        {/* <button onClick={this.handleCloseModal}>Close Modal</button> */}
+                    </Modal>
+                </div>
+              
             </Toolbar>
           </AppBar>
         );
