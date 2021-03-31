@@ -16,11 +16,20 @@ import { Divider } from '@material-ui/core';
 import Modal from 'react-modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import InputBase from '@material-ui/core/InputBase';
+import { fade } from '@material-ui/core/styles';
 
 
-const useStyles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
-      flexGrow: 1,
+        flexGrow: 1,
+    },
+    headerTools: {
+        [theme.breakpoints.only('xs')]: {
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+        },
     },
     appBar: {
         color: "#edede",
@@ -31,122 +40,118 @@ const useStyles = (theme) => ({
         width: "100%",
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+        marginRight: theme.spacing(2),
     },
     loginButton: {
         position: "relative",
         float: "right",
+        alignment: "flex",
         backgroundColor: "#edede",
     },
     title: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
     search: {
-        position: "relative",
-        borderRadius: "4px",
-        backgroundColor: "#c0c0c0",
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginRight: theme.spacing(2),
         marginLeft: 0,
-        width: "300px",
-        float: "right",
-        marginTop: "18px",
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+        },
     },
     searchIcon: {
-        padding: theme.spacing(2),
-        marginRight: theme.spacing(2),
-        height: "100%",
-        position: "relative",
-        pointerEvents: "none",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     inputRoot: {
-        color: "#ffffff",
+        color: 'inherit',
     },
     inputInput: {
-        padding: theme.spacing(1, 1, 1, 7),
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: '20ch',
+        },
     },
-  });
+}));
 
-  class Header extends Component {
+class Header extends Component {
 
     constructor () {
         super();
         this.state = {
-          showModal: false
+            showModal: false
         };
-        
+
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
-      }
-      
-      handleOpenModal () {
-        this.setState({ showModal: true });
-      }
-      
-      handleCloseModal () {
-        this.setState({ showModal: false });
-      }
+    }
 
-    
+    handleOpenModal () {
+        this.setState({ showModal: true });
+    }
+
+    handleCloseModal () {
+        this.setState({ showModal: false });
+    }
+
+
     render() {
         const { classes } = this.props;
-        
+
         return (
-          <AppBar position="static" className={classes.appBar} style={{ background: '#212b35' }} >
-            <Toolbar style={{ width: '100%' }}>
-              <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                <FastfoodIcon />
-              </IconButton>
-              <div className={classes.search} style={{ background: '#ccfff5' }} >
-                                
-                                <span >
-                                <SearchIcon className={classes.searchIcon} />
-                                </span>
-                                
-                                
-                                <Input
-                                    disableUnderline={false}
-                                    placeholder="Search by Restaurant Name"
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ "aria-label": "search" }}
-                                    onChange={this.inputChangeHandler}
-                                    style={{ color: '#c4c4c4' }}
-                                />
-                </div>
-                <div>
-                    <Button className={classes.loginButton} style={{ background: '#c4c4c4' }} onClick={this.handleOpenModal}>
-                        <span>
-                            <AccountCircle />
-                            Login
-                            </span>
-                    </Button>
-                    <Modal 
-                        isOpen={this.state.showModal}
-                        contentLabel="onRequestClose Example"
-                        onRequestClose={this.handleCloseModal}
-                        shouldCloseOnOverlayClick={true}>
-                        <Tabs>
-                            <div>
-                            <Tab label = "Login" />
-                            </div>
-                            <div>
-                            <Tab label = "Signup" />    
-                            </div>
-                        </Tabs>
-                        
-                        {/* <button onClick={this.handleCloseModal}>Close Modal</button> */}
-                    </Modal>
-                </div>
-              
-            </Toolbar>
-          </AppBar>
-        );
-      }
-  }
+            <AppBar position="static" className={classes.appBar} style={{ background: '#212b35' }} >
+    <Toolbar className={classes.headerTools} >
+    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <FastfoodIcon />
+            </IconButton>
+
+            <div className={classes.search}>
+            <div className={classes.searchIcon}>
+            <SearchIcon />
+            </div>
+            <InputBase placeholder="Search…" classes={{ root: classes.inputRoot, input: classes.inputInput,}}
+            inputProps={{ 'aria-label': 'search' }}/>
+            </div>
+
+        <div>
+
+        <Button variant="contained" color="default" className={classes.button} startIcon={<AccountCircle />} onClick={this.handleOpenModal}>
+        Login
+        </Button>
+
+            <Modal isOpen={this.state.showModal} contentLabel="onRequestClose Example" onRequestClose={this.handleCloseModal} shouldCloseOnOverlayClick={true}>
+            <Tabs>
+            <div>
+            <Tab label = "Login" />
+            </div>
+            <div>
+            <Tab label = "Signup" />
+            </div>
+            </Tabs>
+
+        {/* <button onClick={this.handleCloseModal}>Close Modal</button> */}
+    </Modal>
+        </div>
+
+        </Toolbar>
+        </AppBar>
+    );
+    }
+}
 export default withStyles(useStyles) (Header);
