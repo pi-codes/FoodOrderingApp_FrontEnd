@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
+import PropTypes from 'prop-types';
 
 
 const customStyles= {
@@ -26,10 +27,14 @@ const customStyles= {
 
 const TabContainer = function(props) {
     return(
-        <Typography component="div" style={{padding: 0}}>
+        <Typography component="div" style={{padding: 0, textAlign: 'center'}}>
             {props.children}
         </Typography>
     );
+}
+
+TabContainer.PropTypes = {
+    children: PropTypes.node.isRequired
 }
 
 class Header extends Component {
@@ -58,8 +63,8 @@ class Header extends Component {
         return (
             <div>
                 <header className="app-header">
-                    <IconButton  style={{color: "#ffffff"}} aria-label="Menu">
-                    <FastfoodIcon style={{color: "#ffffff"}} />
+                    <IconButton >
+                    <FastfoodIcon className="logo" style={{color: "#ffffff"}} />
                     </IconButton>
                     <div className="login-button">
                         <Button variant="contained" color="default" startIcon={<AccountCircle />} onClick={this.openModalHandler}>
@@ -73,21 +78,46 @@ class Header extends Component {
                 contentLabel="Login"
                 onRequestClose={this.closeModalHandler}
                 style={customStyles}>
-                    <Tabs value={this.state.value} onChange={this.tabChangeHandler}>
+                    <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
                         <Tab label="LOGIN" />
                         <Tab label="SIGNUP"/>
                     </Tabs>
+                    {this.state.value === 0 &&
                     <TabContainer>
                         <FormControl required>
-                            <InputLabel htmlFor="userName">Username</InputLabel>
-                            <Input id="userName" type="text"/>
-                        </FormControl>
+                            <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
+                            <Input id="contactNumber" type="text"/>
+                        </FormControl><br/><br/>
                         <FormControl required>
                             <InputLabel htmlFor="password">Password</InputLabel>
                             <Input id="password" type="password"/>
-                        </FormControl>
-                    </TabContainer>
-
+                        </FormControl><br/><br/>
+                        <Button variant="contained" color="primary">LOGIN</Button>
+                    </TabContainer>}
+                    {this.state.value === 1 &&
+                    <TabContainer>
+                        <FormControl required>
+                            <InputLabel htmlFor="firstName">First Name</InputLabel>
+                            <Input id="firstName" type="text"/>
+                        </FormControl><br/><br/>
+                        <FormControl required>
+                            <InputLabel htmlFor="lastName">Last Name</InputLabel>
+                            <Input id="lastName" type="text"/>
+                        </FormControl><br/><br/>
+                        <FormControl required>
+                            <InputLabel htmlFor="email">Email</InputLabel>
+                            <Input id="email" type="text"/>
+                        </FormControl><br/><br/>
+                        <FormControl required>
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <Input id="password" type="password"/>
+                        </FormControl><br/><br/>
+                        <FormControl required>
+                            <InputLabel htmlFor="contactNo">Contact No.</InputLabel>
+                            <Input id="contactNo" type="text"/>
+                        </FormControl><br/><br/>
+                        <Button variant="contained" color="primary">SIGNUP</Button>
+                    </TabContainer>}
                 </Modal>
             </div>
         )
