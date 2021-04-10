@@ -229,6 +229,17 @@ class Details extends Component {
         }
     }
 
+     //Function used to capitalize the string
+     Capitalize(str) {
+        var arr = str.split(" ")
+        var pascalCasedString = ""
+        arr.map(a => (
+                pascalCasedString += a.charAt(0).toUpperCase() + a.slice(1) + " "
+            )
+        )
+        return pascalCasedString
+    }
+
 
 
 
