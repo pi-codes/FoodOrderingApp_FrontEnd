@@ -22,6 +22,33 @@ import Grid from "@material-ui/core/Grid";
 
 class Details extends Component {
 
+    constructor() {
+        super();
+        this.state = {
+            id: null,
+            restaurant_name: null,
+            photo_URL: null,
+            customer_rating: null,
+            average_price: null,
+            number_customers_rated: null,
+            locality: null,
+            categories: [],
+            open: false,
+            totalAmount: 0,
+            totalItems: 0,
+            cartEmpty: false,
+            orderItems: {id: null, items: [], total: 0},
+            cartItems: [],
+            cartItem: {},
+            itemQuantityDecreased: false,
+            nonloggedIn: false,
+            itemRemovedFromCart: false,
+            itemQuantityIncreased: false,
+            itemAddedFromCart: false,
+        }
+
+    }
+
     render() {
         return (
 
