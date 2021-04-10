@@ -1,5 +1,25 @@
 import React, {Component, Fragment} from 'react';
 
+//Import of stylesheet
+import './Details.css';
+
+//Other components import
+import CustomizedSnackbar from '../../common/customizedsnackbar/CustomizedSnackBar'
+import Header from '../../common/header/Header'
+
+//Material UI component imports
+import IconButton from '@material-ui/core/IconButton';
+import Divider from "@material-ui/core/Divider";
+import AddIcon from '@material-ui/icons/Add';
+import Card from '@material-ui/core/Card';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Badge from '@material-ui/core/Badge';
+import RemoveIcon from '@material-ui/icons/Remove';
+import Typography from '@material-ui/core/Typography';
+import Grid from "@material-ui/core/Grid";
+
 class Details extends Component {
 
     render() {
