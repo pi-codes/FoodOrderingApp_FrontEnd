@@ -49,6 +49,37 @@ class Details extends Component {
 
     }
 
+    componentDidMount() {
+        // Get profile 
+        let data = null;
+        let xhr = new XMLHttpRequest();
+        let that = this;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    id: JSON.parse(this.responseText).id,
+                    restaurant_name: JSON.parse(this.responseText).restaurant_name,
+                    photo_URL: JSON.parse(this.responseText).photo_URL,
+                    customer_rating: JSON.parse(this.responseText).customer_rating,
+                    average_price: JSON.parse(this.responseText).average_price,
+                    number_customers_rated: JSON.parse(this.responseText).number_customers_rated,
+                    locality: JSON.parse(this.responseText).address.locality,
+                    categories: JSON.parse(this.responseText).categories,
+                    orderItems: {id: JSON.parse(this.responseText).id},
+
+
+                });
+            }
+        });
+
+        let url = this.props.baseUrl + 'restaurant/';
+
+        xhr.open("GET", url + this.props.match.params.restaurantId);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.send(data);
+    }
+
     render() {
         return (
 
