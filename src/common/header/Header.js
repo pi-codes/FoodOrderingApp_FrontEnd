@@ -9,9 +9,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import Button from '@material-ui/core/Button';
+import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import Modal from 'react-modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -24,6 +26,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import {Link} from 'react-router-dom';
 
+//importing the css file of the header
 import './Header.css';
 
 //styles for the header using breakpoints to make the header responsive
@@ -71,6 +74,15 @@ const styles = theme => ({
     },
 });
 
+// theme for changing the border bottom color of the searchbox to white when customer clicks on the serach field 
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#ffffff',
+        }
+    }
+});
+
 //custom style for modal
 const customStyles = {
     content: {
@@ -96,238 +108,247 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 }
 
+// clears all the values and required field validation messages and error messages when modal is opened
+openModalHandler = () => {
+    this.setState({
+        modalIsOpen: true,
+        value: 0,
+        loginContactNoRequired: "dispNone",
+        loginContactNo: "",
+        loginPasswordRequired: "dispNone",
+        loginPassword: "",
+        loginErroMessage: "",
+        loginErroMessageRequired: "dispNone",
+        signupFirstname: "",
+        signupFirstnameRequired: "dispNone",
+        singupLastname: "",
+        signupEmail: "",
+        signupEmailRequired: "dispNone",
+        signupPassword: "",
+        signupPasswordRequired: "dispNone",
+        signupContactNo: "",
+        signupContactNoRequired: "dispNone",
+        signupErrorMessage: "",
+        signupErrorMessageRequired: "dispNone",
+    });
+}
 
-    // clears all the values and required field validation messages and error messages when modal is opened
-    openModalHandler = () => {
+// closes the modal
+closeModalHandler = () => {
+    this.setState({modalIsOpen: false});
+}
+
+// changes the tabs inside modal
+tabChangeHandler = (event, value) => {
+    this.setState({value});
+}
+
+/* when customer click's on login button then below function will be called 
+performs field validation and displays login error message if cutomer tries to login with invalid credentials or 
+contact no is not registered */
+loginClickHandler = () => {
+
+    let contactNoRequired = false;
+    if (this.state.loginContactNo === "") {
         this.setState({
-            modalIsOpen: true,
-            value: 0,
-            loginContactNoRequired: "dispNone",
-            loginContactNo: "",
-            loginPasswordRequired: "dispNone",
-            loginPassword: "",
-            loginErroMessage: "",
-            loginErroMessageRequired: "dispNone",
-            signupFirstname: "",
-            signupFirstnameRequired: "dispNone",
-            singupLastname: "",
-            signupEmail: "",
-            signupEmailRequired: "dispNone",
-            signupPassword: "",
-            signupPasswordRequired: "dispNone",
-            signupContactNo: "",
-            signupContactNoRequired: "dispNone",
-            signupErrorMessage: "",
-            signupErrorMessageRequired: "dispNone",
+            loginContactNoRequired: "dispBlock",
+            loginContactNoRequiredMessage: "required"
+        });
+        contactNoRequired = true;
+    } else {
+        this.setState({
+            loginContactNoRequired: "dispNone"
         });
     }
 
-    // closes the modal
-    closeModalHandler = () => {
-        this.setState({modalIsOpen: false});
-    }
-
-    // changes the tabs inside modal
-    tabChangeHandler = (event, value) => {
-        this.setState({value});
-    }
-
-    /* when customer click's on login button then below function will be called 
-    performs field validation and displays login error message if cutomer tries to login with invalid credentials or 
-    contact no is not registered */
-    loginClickHandler = () => {
-
-        let contactNoRequired = false;
-        if (this.state.loginContactNo === "") {
-            this.setState({
-                loginContactNoRequired: "dispBlock",
-                loginContactNoRequiredMessage: "required"
-            });
-            contactNoRequired = true;
-        } else {
-            this.setState({
-                loginContactNoRequired: "dispNone"
-            });
-        }
-
-        let passwordRequired = false;
-        if (this.state.loginPassword === "") {
-            this.setState({
-                loginPasswordRequired: "dispBlock",
-                loginPasswordRequiredMessage: "required"
-            });
-            passwordRequired = true;
-        } else {
-            this.setState({
-                loginPasswordRequired: "dispNone"
-            });
-        }
-
-        if ((contactNoRequired && passwordRequired) || contactNoRequired) {
-            return;
-        }
-
-        // validates the contact number
-        const isvalidContactNo = validator.isMobilePhone(this.state.loginContactNo);
-        if ((contactNoRequired === false && !isvalidContactNo) || this.state.loginContactNo.length !== 10) {
-            this.setState({
-                loginContactNoRequiredMessage: "Invalid Contact",
-                loginContactNoRequired: "dispBlock"
-            });
-            return;
-        }
-
-        if (passwordRequired) {
-            return;
-        }
-        this.sendLoginDetails();
-    }
-
-    // calls when value of the contact no field changes in login form
-    inputLoginContactNoChangeHandler = (e) => {
-        this.setState({loginContactNo: e.target.value});
-    }
-
-    // calls when value of the password field changes in login form
-    inputLoginPasswordChangeHandler = (e) => {
-        this.setState({loginPassword: e.target.value});
-    }
-
-
-    // signup form validation 
-    signupClickHandler = () => {
-
-        this.state.signupFirstname === "" ? this.setState({signupFirstnameRequired: "dispBlock"}) : this.setState({signupFirstnameRequired: "dispNone"});
-
-        let signupEmailRequired = false;
-        if (this.state.signupEmail === "") {
-            this.setState({
-                signupEmailRequiredMessage: "required",
-                signupEmailRequired: "dispBlock"
-            });
-            signupEmailRequired = true;
-        } else {
-            this.setState({signupEmailRequired: "dispNone"});
-        }
-
-        let signupPasswordRequired = false;
-        if (this.state.signupPassword === "") {
-            this.setState({
-                signupPasswordRequiredMessage: "required",
-                signupPasswordRequired: "dispBlock"
-            });
-            signupPasswordRequired = true;
-        } else {
-            this.setState({signupPasswordRequired: "dispNone"});
-        }
-
-        let signupContactNoRequired = false;
-        if (this.state.signupContactNo === "") {
-            this.setState({
-                signupContactNoRequiredMessage: "required",
-                signupContactNoRequired: "dispBlock"
-            });
-            signupContactNoRequired = true;
-        } else {
-            this.setState({signupContactNoRequired: "dispNone"});
-        }
-
-        // checks the email is valid or not
-        const isValidEmail = validator.isEmail(this.state.signupEmail);
-        if (signupEmailRequired === false && !isValidEmail) {
-            this.setState({
-                signupEmailRequiredMessage: "Invalid Email",
-                signupEmailRequired: "dispBlock"
-            });
-            return;
-        }
-
-        //check the password has  at least one capital letter, one small letter, one number, and one special character
-        const isValidPassword = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$');
-        if (signupPasswordRequired === false && !isValidPassword.test(this.state.signupPassword)) {
-            this.setState({
-                signupPasswordRequiredMessage: "Password must contain at least one capital letter, one small letter, one number, and one special character",
-                signupPasswordRequired: "dispBlock"
-            });
-            return;
-        }
-
-        if (signupContactNoRequired) {
-            return;
-        }
-
-        // checks the contact number is valid or not
-        const isvalidContactNo = validator.isMobilePhone(this.state.signupContactNo);
-        if ((signupContactNoRequired === false && !isvalidContactNo) || this.state.signupContactNo.length !== 10) {
-            this.setState({
-                signupContactNoRequiredMessage: "Contact No. must contain only numbers and must be 10 digits long",
-                signupContactNoRequired: "dispBlock"
-            });
-            return;
-        }
-
-        this.sendSignupDetails();
-    }
-
-    // calls when value of the firstname field changes in signup form
-    inputSignupFirstNameChangeHandler = (e) => {
-        this.setState({signupFirstname: e.target.value});
-    }
-
-    // calls when value of the lastname field changes in signup form
-    inputSignupLastNameChangeHandler = (e) => {
-        this.setState({singupLastname: e.target.value});
-    }
-
-    // calls when value of the email field changes in signup form
-    inputSignupEmailChangeHandler = (e) => {
-        this.setState({signupEmail: e.target.value});
-    }
-
-    // calls when value of the password field changes in signup form
-    inputSignupPasswordChangeHandler = (e) => {
-        this.setState({signupPassword: e.target.value});
-    }
-
-    // calls when value of the contact no field changes in signup form
-    inputSignupContactNoChangeHandler = (e) => {
-        this.setState({signupContactNo: e.target.value});
-    }
-
-    // clears the signup form after successful signup
-    clearSignupForm = () => {
+    let passwordRequired = false;
+    if (this.state.loginPassword === "") {
         this.setState({
-            signupFirstname: "",
-            signupFirstnameRequired: "dispNone",
-            singupLastname: "",
-            signupEmail: "",
-            signupEmailRequired: "dispNone",
-            signupPassword: "",
-            signupPasswordRequired: "dispNone",
-            signupContactNo: "",
-            signupContactNoRequired: "dispNone",
-            signupErrorMessage: "",
-            signupErrorMessageRequired: "dispNone",
+            loginPasswordRequired: "dispBlock",
+            loginPasswordRequiredMessage: "required"
+        });
+        passwordRequired = true;
+    } else {
+        this.setState({
+            loginPasswordRequired: "dispNone"
         });
     }
 
-    // called when customer clicks on profile icon
-    onProfileIconClick = (e) => {
-        this.setState({'menuState': !this.state.menuState, 'anchorEl': e.currentTarget});
+    if ((contactNoRequired && passwordRequired) || contactNoRequired) {
+        return;
     }
 
-    // closes the menu
-    onMenuClose = () => {
-        this.setState({'menuState': !this.state.menuState, 'anchorEl': null});
-    }
-
-    // redirects to profile page when customer clicks on My Profile inside the menu
-    onMyProfile = () => {
+    // validates the contact number
+    const isvalidContactNo = validator.isMobilePhone(this.state.loginContactNo);
+    if ((contactNoRequired === false && !isvalidContactNo) || this.state.loginContactNo.length !== 10) {
         this.setState({
-            loggedIn: true
+            loginContactNoRequiredMessage: "Invalid Contact",
+            loginContactNoRequired: "dispBlock"
         });
+        return;
     }
 
+    if (passwordRequired) {
+        return;
+    }
+    this.sendLoginDetails();
+}
+
+// calls when value of the contact no field changes in login form
+inputLoginContactNoChangeHandler = (e) => {
+    this.setState({loginContactNo: e.target.value});
+}
+
+// calls when value of the password field changes in login form
+inputLoginPasswordChangeHandler = (e) => {
+    this.setState({loginPassword: e.target.value});
+}
+
+
+// signup form validation 
+signupClickHandler = () => {
+
+    this.state.signupFirstname === "" ? this.setState({signupFirstnameRequired: "dispBlock"}) : this.setState({signupFirstnameRequired: "dispNone"});
+
+    let signupEmailRequired = false;
+    if (this.state.signupEmail === "") {
+        this.setState({
+            signupEmailRequiredMessage: "required",
+            signupEmailRequired: "dispBlock"
+        });
+        signupEmailRequired = true;
+    } else {
+        this.setState({signupEmailRequired: "dispNone"});
+    }
+
+    let signupPasswordRequired = false;
+    if (this.state.signupPassword === "") {
+        this.setState({
+            signupPasswordRequiredMessage: "required",
+            signupPasswordRequired: "dispBlock"
+        });
+        signupPasswordRequired = true;
+    } else {
+        this.setState({signupPasswordRequired: "dispNone"});
+    }
+
+    let signupContactNoRequired = false;
+    if (this.state.signupContactNo === "") {
+        this.setState({
+            signupContactNoRequiredMessage: "required",
+            signupContactNoRequired: "dispBlock"
+        });
+        signupContactNoRequired = true;
+    } else {
+        this.setState({signupContactNoRequired: "dispNone"});
+    }
+
+    // checks the email is valid or not
+    const isValidEmail = validator.isEmail(this.state.signupEmail);
+    if (signupEmailRequired === false && !isValidEmail) {
+        this.setState({
+            signupEmailRequiredMessage: "Invalid Email",
+            signupEmailRequired: "dispBlock"
+        });
+        return;
+    }
+
+    //check the password has  at least one capital letter, one small letter, one number, and one special character
+    const isValidPassword = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$');
+    if (signupPasswordRequired === false && !isValidPassword.test(this.state.signupPassword)) {
+        this.setState({
+            signupPasswordRequiredMessage: "Password must contain at least one capital letter, one small letter, one number, and one special character",
+            signupPasswordRequired: "dispBlock"
+        });
+        return;
+    }
+
+    if (signupContactNoRequired) {
+        return;
+    }
+
+    // checks the contact number is valid or not
+    const isvalidContactNo = validator.isMobilePhone(this.state.signupContactNo);
+    if ((signupContactNoRequired === false && !isvalidContactNo) || this.state.signupContactNo.length !== 10) {
+        this.setState({
+            signupContactNoRequiredMessage: "Contact No. must contain only numbers and must be 10 digits long",
+            signupContactNoRequired: "dispBlock"
+        });
+        return;
+    }
+
+    this.sendSignupDetails();
+}
+
+// calls when value of the firstname field changes in signup form
+inputSignupFirstNameChangeHandler = (e) => {
+    this.setState({signupFirstname: e.target.value});
+}
+
+// calls when value of the lastname field changes in signup form
+inputSignupLastNameChangeHandler = (e) => {
+    this.setState({singupLastname: e.target.value});
+}
+
+// calls when value of the email field changes in signup form
+inputSignupEmailChangeHandler = (e) => {
+    this.setState({signupEmail: e.target.value});
+}
+
+// calls when value of the password field changes in signup form
+inputSignupPasswordChangeHandler = (e) => {
+    this.setState({signupPassword: e.target.value});
+}
+
+// calls when value of the contact no field changes in signup form
+inputSignupContactNoChangeHandler = (e) => {
+    this.setState({signupContactNo: e.target.value});
+}
+
+// clears the signup form after successful signup
+clearSignupForm = () => {
+    this.setState({
+        signupFirstname: "",
+        signupFirstnameRequired: "dispNone",
+        singupLastname: "",
+        signupEmail: "",
+        signupEmailRequired: "dispNone",
+        signupPassword: "",
+        signupPasswordRequired: "dispNone",
+        signupContactNo: "",
+        signupContactNoRequired: "dispNone",
+        signupErrorMessage: "",
+        signupErrorMessageRequired: "dispNone",
+    });
+}
+
+// called when customer clicks on profile icon
+onProfileIconClick = (e) => {
+    this.setState({'menuState': !this.state.menuState, 'anchorEl': e.currentTarget});
+}
+
+// closes the menu
+onMenuClose = () => {
+    this.setState({'menuState': !this.state.menuState, 'anchorEl': null});
+}
+
+// redirects to profile page when customer clicks on My Profile inside the menu
+onMyProfile = () => {
+    this.setState({
+        loggedIn: true
+    });
+}
+
+// when customer clicks on logout inside the menu remove's access-token, uuid, first-name from sessionStorage and redirects to home page and closes the menu
+onLogout = () => {
+    sessionStorage.removeItem('access-token');
+    sessionStorage.removeItem('uuid');
+    sessionStorage.removeItem('first-name');
+    this.setState({
+        loggedIn: false
+    })
+    this.onMenuClose();
+}
 
 class Header extends Component {
 
@@ -378,7 +399,28 @@ class Header extends Component {
                             <FastfoodIcon/>
                         </IconButton>
                         <div className={classes.grow}/>
-                        
+                        {/* searchbox will be displayed only if needed */}
+                        {this.props.showSearchBox ?
+                            <div className={classes.searchBox}>
+                                <ThemeProvider theme={theme}>
+                                    <InputLabel htmlFor="search-box-input"/>
+                                    <Input id="search-box-input"
+                                           startAdornment={
+                                               <InputAdornment position="start">
+                                                   <SearchIcon/>
+                                               </InputAdornment>
+                                           }
+                                           placeholder="Search by Restaurant Name"
+                                           classes={{
+                                               root: classes.inputRoot,
+                                               input: classes.inputInput,
+                                           }}
+                                           onChange={this.props.searchHandler}
+                                    />
+                                </ThemeProvider>
+                            </div>
+                            : null
+                        }
                         <div className={classes.grow}/>
                         {/* If customer is not logged in then it displays login button otherwise displays the customer's firstname */}
                         {!this.state.loggedIn ?
@@ -419,6 +461,7 @@ class Header extends Component {
                     {/* If value is 0 then displays the first tab of the modal */}
                     {this.state.value === 0 &&
                     <TabContainer>
+                        {/* login form with contact no and password input fields */}
                         <FormControl required className="login-and-signup-forms">
                             <InputLabel htmlFor="contactno">Contact No</InputLabel>
                             <Input id="contactno" type="text" value={this.state.loginContactNo}
@@ -446,6 +489,7 @@ class Header extends Component {
                     }
                     {this.state.value === 1 &&
                     <TabContainer>
+                        {/* signup form contains firstname, lastname, email, password and contact no input fields */}
                         <FormControl required className="login-and-signup-forms">
                             <InputLabel htmlFor="firstname">First Name</InputLabel>
                             <Input id="firstname" type="text" value={this.state.signupFirstname}
@@ -502,8 +546,6 @@ class Header extends Component {
             </div>
         );
     }
-
-
 }
 
 export default withStyles(styles)(Header);
