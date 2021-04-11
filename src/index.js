@@ -5,10 +5,11 @@ import * as serviceWorker from './serviceWorker';
 import Controller from './screens/Controller';
 import Header from './common/header/Header';
 import Home from './screens/home/Home';
+import Controller from './screens/Controller';
 import 'typeface-roboto';
 
 ReactDOM.render(
-    <Home />,
+    <Controller />,
     document.getElementById('root')
 );
 
