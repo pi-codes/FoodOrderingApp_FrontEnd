@@ -132,7 +132,6 @@ class Home extends Component {
     }
     /*let xhrPaymentMethods = new XMLHttpRequest();
     let that = this;
-
     xhrPaymentMethods.addEventListener("readystatechange", function () {
         if (this.readyState === 4 && xhrPaymentMethods.status === 200) {
             const restaurantsObjArray = JSON.parse(this.responseText).restaurants;
@@ -140,7 +139,6 @@ class Home extends Component {
             that.setState({ restaurantsList: restaurantsObjArray });
         }
     });
-
     xhrPaymentMethods.open("GET", this.props.baseUrl + "restaurant");
     xhrPaymentMethods.setRequestHeader("Accept", "application/json");
     xhrPaymentMethods.send();*/
